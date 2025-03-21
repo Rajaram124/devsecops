@@ -7,10 +7,14 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM nginx:1.25.3-alpine3.21  # Use a specific Alpine version for compatibility
 COPY --from=build /app/dist /usr/share/nginx/html
-# Add nginx configuration if needed
+
+# Uncomment if you need a custom Nginx config
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-RUN apk update && apk upgrade libxml2 --repository=http://dl-cdn.alpinelinux.org/alpine/v3.21/main
+
+# Install libxml2 correctly without updating all packages
+RUN apk add --no-cache libxml2
